@@ -29,3 +29,4 @@ exports.decryptData =  (data) => {
     decipher.final('utf8')
   )
 }
+
