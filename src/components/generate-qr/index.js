@@ -16,7 +16,6 @@ const GenerateQR = () => {
       const response = await dataEncryption(payload);
       setQrData(" ");
       setDataEncrypted(response.data.encryptedData);
-      console.log("tryingf");
       toast.success(
         response?.data.message ||
           "Data is successfully encrypted! QR will generate in a moment."
@@ -31,13 +30,12 @@ const GenerateQR = () => {
       .getElementById("qrCodeEl")
       .toDataURL("image/png")
       .replace("image/png", "image/octet-stream");
-    console.log(qrCodeURL);
-    let aEl = document.createElement("a");
-    aEl.href = qrCodeURL;
-    aEl.download = "QR_Code.png";
-    document.body.appendChild(aEl);
-    aEl.click();
-    document.body.removeChild(aEl);
+    let downloadElement = document.createElement("a");
+    downloadElement.href = qrCodeURL;
+    downloadElement.download = "QR_Code.png";
+    document.body.appendChild(downloadElement);
+    downloadElement.click();
+    document.body.removeChild(downloadElement);
   };
 
   return (
@@ -99,7 +97,6 @@ const GenerateQR = () => {
                 className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-6  rounded"
                 type="submit"
                 onClick={downloadQRCode}
-                disabled={!qrData}
               >
                 Download QR
               </button>
