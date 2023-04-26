@@ -1,56 +1,31 @@
 import React, { useState } from "react";
+import { toast } from "react-toastify";
+import { dataEncryption } from "../../services";
 
 const GenerateQR = () => {
   const [qrData, setQrData] = useState("");
+  const [dataEncrypted, setDataEncrypted] = useState("");
 
-  console.log(qrData);
+  const handleDataEncryption = async (e) => {
+    e.preventDefault();
+    const payload = {
+      data: qrData,
+    };
+    try {
+      const response = await dataEncryption(payload);
+      setQrData(" ");
+      setDataEncrypted(response.data.encryptedData);
+      console.log("tryingf");
+      toast.success(
+        response?.data.message ||
+          "Data is successfully encrypted! QR will generate in a moment."
+      );
+    } catch (error) {
+      toast.error(error?.message || "Process failed! Please Try again.");
+    }
+  };
 
-  // const handleGeneration = (e) => {
-  //   e.preventDefault();
-  //   console.log("submit button clicked");
-
-  //   const textArea = document.getElementById("text-data");
-  //   console.log(textArea.value);
-  //   const qrtext = code.encryptMessage(textArea.value, "your_password");
-  //   console.log(qrtext);
-  //   document.getElementById("qr-result").innerHTML =
-  //     "QR code for " + textArea.value + ":";
-  //   alert("qr code generated successfully");
-  //   qr.set({
-  //     foreground: "black",
-  //     size: 200,
-  //     value: qrtext,
-  //   });
-
-  //   let code = (function () {
-  //     return {
-  //       encryptMessage: function (messageToencrypt = "", secretkey = "") {
-  //         var encryptedMessage = CryptoJS.AES.encrypt(
-  //           messageToencrypt,
-  //           secretkey
-  //         );
-  //         return encryptedMessage.toString();
-  //       },
-  //       decryptMessage: function (encryptedMessage = "", secretkey = "") {
-  //         var decryptedBytes = CryptoJS.AES.decrypt(
-  //           encryptedMessage,
-  //           secretkey
-  //         );
-  //         var decryptedMessage = decryptedBytes.toString(CryptoJS.enc.Utf8);
-
-  //         return decryptedMessage;
-  //       },
-  //     };
-  //   })();
-  //   var qr;
-  //   (function () {
-  //     qr = new QRious({
-  //       element: document.getElementById("qr-code"),
-  //       size: 200,
-  //       value: "https://studytonight.com",
-  //     });
-  //   })();
-  // };
+  console.log(dataEncrypted);
 
   return (
     <div>
@@ -68,6 +43,7 @@ const GenerateQR = () => {
                   <textarea
                     id="data"
                     name="data"
+                    value={qrData}
                     className="appearance-none block p-3 w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 pl-8 mb-3 text-justify leading-tight focus:outline-none focus:bg-white focus:border-gray-500 h-40 resize-none"
                     onChange={(e) => setQrData(e.target.value)}
                   ></textarea>
@@ -77,6 +53,8 @@ const GenerateQR = () => {
                 <button
                   className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
                   type="submit"
+                  onClick={handleDataEncryption}
+                  disabled={!qrData}
                 >
                   Generate QR
                 </button>
