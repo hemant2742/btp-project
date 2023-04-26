@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { toast } from "react-toastify";
+import QRCode from "qrcode.react";
 import { dataEncryption } from "../../services";
 
 const GenerateQR = () => {
@@ -25,12 +26,24 @@ const GenerateQR = () => {
     }
   };
 
-  console.log(dataEncrypted);
+  const downloadQRCode = () => {
+    const qrCodeURL = document
+      .getElementById("qrCodeEl")
+      .toDataURL("image/png")
+      .replace("image/png", "image/octet-stream");
+    console.log(qrCodeURL);
+    let aEl = document.createElement("a");
+    aEl.href = qrCodeURL;
+    aEl.download = "QR_Code.png";
+    document.body.appendChild(aEl);
+    aEl.click();
+    document.body.removeChild(aEl);
+  };
 
   return (
     <div>
       <section className="antialiased text-gray-600 py-8 px-4 ml-100">
-        <div className="flex flex-col justify-center h-full">
+        <div className="flex  justify-center h-full">
           <div className="bg-green-50 rounded-xl w-full max-w-2xl mx-auto py-12 border-2 rounded-2xl shadow-2xl">
             <header className="px-3 py-2 border-b border-gray-100">
               <h2 className="font-semibold text-2xl text-center">
@@ -63,6 +76,37 @@ const GenerateQR = () => {
           </div>
         </div>
       </section>
+      {dataEncrypted && (
+        <div className="grid pb-5 place-items-center">
+          <div>
+            <header className=" py-5  border-b border-gray-100">
+              <h2 className="font-semibold text-2xl text-center">
+                Your Generated QR Code is:
+              </h2>
+            </header>
+            <div className="flex items-center pt-2 mr->7 justify-center">
+              <QRCode
+                id="qrCodeEl"
+                title="QR code"
+                value={dataEncrypted}
+                bgColor={"#FFFFFF"}
+                fgColor={"#000000"}
+                size={256}
+              />
+            </div>
+            <div className="flex items-center pt-4  justify-center">
+              <button
+                className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-6  rounded"
+                type="submit"
+                onClick={downloadQRCode}
+                disabled={!qrData}
+              >
+                Download QR
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
