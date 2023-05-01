@@ -15,6 +15,6 @@ exports.decryptData = async function (req, res) {
   const decryptedData = decryptData(data);
   res.json({
     decryptedData,
-    error: "Process failed! Please Try again.",
+    message: "Data is successfully decrypted!",
   });
 };
