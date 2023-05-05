@@ -4,7 +4,6 @@ const cookieParser = require("cookie-parser");
 const cors = require("cors");
 const mongo = require("./helpers/mongo");
 const bodyParser = require("body-parser");
-const { encryptData, decryptData } = require("./helpers/crypto");
 const { crypto } = require("./routes");
 
 function server() {
