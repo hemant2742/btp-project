@@ -1,13 +1,13 @@
 import { useState } from "react";
 import { toast } from "react-toastify";
-import QRCode from "qrcode.react";
+import Papa from "papaparse";
 import { dataEncryption } from "../../services";
 
 function GenerateQr() {
   const [subject, setSubject] = useState("");
   const [marks, setMarks] = useState("");
   const [qrData, setQrData] = useState({});
-  const [dataEncrypted, setDataEncrypted] = useState("");
+  const [encryptedData, setEncryptedData] = useState([]);
 
   function handleSubmit(e) {
     e.preventDefault();
@@ -23,22 +23,44 @@ function GenerateQr() {
 
   const handleDataEncryption = async (e) => {
     e.preventDefault();
-    const data = JSON.stringify(qrData);
     const payload = {
-      data: data,
+      data: qrData,
     };
     try {
       const response = await dataEncryption(payload);
-      setQrData({});
-      setDataEncrypted(response.data.encryptedData);
+      if(response.data.error)
+      {
+        toast.error(
+        response?.data.message ||
+          "Data is successfully encrypted! QR will generate in a moment."
+      );
+      }
+      else
+      {
+      setEncryptedData(response.data.encryptedData)
       toast.success(
         response?.data.message ||
           "Data is successfully encrypted! QR will generate in a moment."
       );
+      }
     } catch (error) {
       toast.error(error?.message || "Process failed! Please Try again.");
     }
   };
+
+  const handleCSVConversion = (e) => {
+    const file = e.target.files[0];
+    if(file)
+    {
+      Papa.parse(file, {
+        header: true,
+      skipEmptyLines: true,
+      complete: function (results) {
+        setQrData(results.data);
+      },
+      })
+    }
+  }
 
   const downloadQRCode = () => {
     const qrCodeURL = document
@@ -52,51 +74,31 @@ function GenerateQr() {
     downloadElement.click();
     document.body.removeChild(downloadElement);
   };
-
+  
+  console.log(encryptedData);
   return (
     <div className="flex flex-col items-center justify-center">
       <h1 className="text-2xl font-bold mb-8 pt-8">
-        Enter the following data to generate QR
+        Upload the CSV to generate QRS
       </h1>
-      <form onSubmit={handleSubmit} className="w-1/2">
-        <div className="mb-4">
-          <label
-            className="block text-gray-700 font-bold mb-2"
-            htmlFor="subject"
-          >
-            Subject
-          </label>
-          <input
-            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-            id="subject"
-            type="text"
-            placeholder="Enter subject name"
-            value={subject}
-            onChange={(e) => setSubject(e.target.value)}
-          />
-        </div>
-        <div className="mb-4">
-          <label className="block text-gray-700 font-bold mb-2" htmlFor="marks">
-            Marks obtained
-          </label>
-          <input
-            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-            id="marks"
-            type="number"
-            placeholder="Enter marks obtained"
-            value={marks}
-            onChange={(e) => setMarks(e.target.value)}
-          />
-        </div>
-        <button
-          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-          type="submit"
-          disabled={!subject || !marks}
-        >
-          Add Subject
-        </button>
-      </form>
-      {Object.keys(qrData).length > 0 && (
+     
+        <input
+          type="file"
+          name="file"
+          icon='file text outline'
+          iconPosition='left'
+          label='Upload CSV'
+          labelPosition='right'
+          placeholder='UploadCSV...'
+          onChange={handleCSVConversion}
+         />
+         <button
+                className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-6  rounded"
+                type="submit"
+                onClick={handleDataEncryption}
+                disabled={!qrData}
+          >Submit</button>
+       {/*{Object.keys(qrData).length > 0 && (
         <div className="mt-8">
           <h2 className="text-lg font-bold mb-4">Subjects List:</h2>
           <table className="min-w-full divide-y divide-gray-200 border">
@@ -168,7 +170,8 @@ function GenerateQr() {
             </div>
           </div>
         </div>
-      )}
+      )} */}
+      
     </div>
   );
 }
