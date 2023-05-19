@@ -1,25 +1,13 @@
 import { useState } from "react";
 import { toast } from "react-toastify";
+import QRCode from "react-qr-code";
 import Papa from "papaparse";
 import { dataEncryption } from "../../services";
+import Marksheet from "../marksheet";
 
 function GenerateQr() {
-  const [subject, setSubject] = useState("");
-  const [marks, setMarks] = useState("");
   const [qrData, setQrData] = useState({});
   const [encryptedData, setEncryptedData] = useState([]);
-
-  function handleSubmit(e) {
-    e.preventDefault();
-
-    setQrData({
-      ...qrData,
-      [subject]: marks,
-    });
-
-    setSubject("");
-    setMarks("");
-  }
 
   const handleDataEncryption = async (e) => {
     e.preventDefault();
@@ -28,20 +16,17 @@ function GenerateQr() {
     };
     try {
       const response = await dataEncryption(payload);
-      if(response.data.error)
-      {
+      if (response.data.error) {
         toast.error(
-        response?.data.message ||
-          "Data is successfully encrypted! QR will generate in a moment."
-      );
-      }
-      else
-      {
-      setEncryptedData(response.data.encryptedData)
-      toast.success(
-        response?.data.message ||
-          "Data is successfully encrypted! QR will generate in a moment."
-      );
+          response?.data.message ||
+            "Data is successfully encrypted! QR will generate in a moment."
+        );
+      } else {
+        setEncryptedData(response.data.encryptedData);
+        toast.success(
+          response?.data.message ||
+            "Data is successfully encrypted! QR will generate in a moment."
+        );
       }
     } catch (error) {
       toast.error(error?.message || "Process failed! Please Try again.");
@@ -50,128 +35,114 @@ function GenerateQr() {
 
   const handleCSVConversion = (e) => {
     const file = e.target.files[0];
-    if(file)
-    {
+    if (file) {
       Papa.parse(file, {
         header: true,
-      skipEmptyLines: true,
-      complete: function (results) {
-        setQrData(results.data);
-      },
-      })
+        skipEmptyLines: true,
+        complete: function (results) {
+          setQrData(results.data);
+        },
+      });
     }
-  }
-
-  const downloadQRCode = () => {
-    const qrCodeURL = document
-      .getElementById("qrCodeEl")
-      .toDataURL("image/png")
-      .replace("image/png", "image/octet-stream");
-    let downloadElement = document.createElement("a");
-    downloadElement.href = qrCodeURL;
-    downloadElement.download = "QR_Code.png";
-    document.body.appendChild(downloadElement);
-    downloadElement.click();
-    document.body.removeChild(downloadElement);
   };
-  
-  console.log(encryptedData);
+
+  const downloadQRCode = (item) => {
+    const svgElement = document.getElementById(item.rollNumber);
+    const serializer = new XMLSerializer();
+    const svgString = serializer.serializeToString(svgElement);
+
+    const canvas = document.createElement("canvas");
+    const ctx = canvas.getContext("2d");
+    const DOMURL = window.URL || window.webkitURL || window;
+
+    const img = new Image();
+    const svgBlob = new Blob([svgString], {
+      type: "image/svg+xml;charset=utf-8",
+    });
+    const url = DOMURL.createObjectURL(svgBlob);
+
+    img.onload = () => {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      canvas.width = img.width;
+      canvas.height = img.height;
+      ctx.drawImage(img, 0, 0);
+
+      DOMURL.revokeObjectURL(url);
+
+      const dataURL = canvas.toDataURL("image/png");
+      const link = document.createElement("a");
+      link.href = dataURL;
+      link.download = `qrcode_${item.rollNumber}.png`;
+      link.click();
+    };
+
+    img.src = url;
+  };
+
   return (
     <div className="flex flex-col items-center justify-center">
       <h1 className="text-2xl font-bold mb-8 pt-8">
-        Upload the CSV to generate QRS
+        Upload the CSV to generate QRs
       </h1>
-     
-        <input
-          type="file"
-          name="file"
-          icon='file text outline'
-          iconPosition='left'
-          label='Upload CSV'
-          labelPosition='right'
-          placeholder='UploadCSV...'
-          onChange={handleCSVConversion}
-         />
-         <button
-                className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-6  rounded"
-                type="submit"
-                onClick={handleDataEncryption}
-                disabled={!qrData}
-          >Submit</button>
-       {/*{Object.keys(qrData).length > 0 && (
-        <div className="mt-8">
-          <h2 className="text-lg font-bold mb-4">Subjects List:</h2>
-          <table className="min-w-full divide-y divide-gray-200 border">
-            <thead className="bg-gray-50">
-              <tr>
-                <th
-                  scope="col"
-                  className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                >
-                  Subject
-                </th>
-                <th
-                  scope="col"
-                  className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                >
-                  Marks Obtained
-                </th>
-              </tr>
-            </thead>
-            <tbody className="bg-white divide-y divide-gray-200">
-              {Object.entries(qrData).map(([subject, marks]) => (
-                <tr key={subject}>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="text-sm text-gray-900">{subject}</div>
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="text-sm text-gray-900">{marks}</div>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-          <button
-            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline mt-5"
-            type="submit"
-            onClick={handleDataEncryption}
-          >
-            Genarate QR
-          </button>
-        </div>
-      )}
-      {dataEncrypted && (
-        <div className="grid pb-5 place-items-center">
-          <div>
-            <header className=" py-5  border-b border-gray-100">
-              <h2 className="font-semibold text-2xl text-center">
-                Your Generated QR Code is:
-              </h2>
-            </header>
-            <div className="flex items-center pt-2 mr->7 justify-center">
-              <QRCode
-                id="qrCodeEl"
-                title="QR code"
-                value={dataEncrypted}
-                bgColor={"#FFFFFF"}
-                fgColor={"#000000"}
-                size={256}
-              />
-            </div>
-            <div className="flex items-center pt-4  justify-center">
-              <button
-                className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-6  rounded"
-                type="submit"
-                onClick={downloadQRCode}
-                disabled={!qrData}
-              >
-                Download QR
-              </button>
-            </div>
+
+      <input
+        type="file"
+        accept=".csv"
+        name="file"
+        icon="file text outline"
+        iconPosition="left"
+        label="Upload CSV"
+        labelPosition="right"
+        placeholder="UploadCSV..."
+        onChange={handleCSVConversion}
+      />
+      <button
+        className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-6 mt-4 rounded"
+        type="submit"
+        onClick={handleDataEncryption}
+        disabled={!qrData}
+      >
+        Submit
+      </button>
+
+      <Marksheet />
+
+      {encryptedData.length > 0 && (
+        <div className="pt-8">
+          <div className="flex flex-wrap justify-center border">
+            {encryptedData.map((item) => (
+              <div key={item.id} className="w-1/3 p-4 border border-gray-900">
+                <div className="flex flex-col items-center">
+                  {/* Roll number */}
+                  <h3 className="text-lg font-semibold mb-2">
+                    <b>Roll Number : {item.rollNumber}</b>
+                  </h3>
+
+                  {/* QR code */}
+                  <QRCode
+                    id={item.rollNumber}
+                    title="QR code"
+                    value={item.encryptedString}
+                    bgColor={"#FFFFFF"}
+                    fgColor={"#000000"}
+                    size={130}
+                  />
+
+                  {/* Download button */}
+                  <button
+                    className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded mt-2"
+                    type="submit"
+                    onClick={() => downloadQRCode(item)}
+                    disabled={!qrData}
+                  >
+                    Download QR
+                  </button>
+                </div>
+              </div>
+            ))}
           </div>
         </div>
-      )} */}
-      
+      )}
     </div>
   );
 }
