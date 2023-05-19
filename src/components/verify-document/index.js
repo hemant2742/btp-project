@@ -1,35 +1,51 @@
-// import React, { useRef, useEffect } from "react";
-// import { BrowserMultiFormatReader } from "@zxing/library";
+// import React, { useState } from "react";
+// import { createWorker } from "tesseract.js";
 
-const VerifyDocument = () => {
-  // const videoRef = useRef(null);
-  // const codeReader = new BrowserMultiFormatReader();
+// const QRCodeDecryptor = () => {
+//   const [encodedString, setEncodedString] = useState("");
+//   const [errorMessage, setErrorMessage] = useState("");
 
-  // useEffect(() => {
-  //   codeReader.decodeFromVideoDevice(
-  //     null,
-  //     videoRef.current.id,
-  //     (result, error) => {
-  //       if (result) {
-  //         console.log(result.getText());
-  //       }
-  //       if (error) {
-  //         console.log(error);
-  //       }
-  //     }
-  //   );
-  // }, []);
+//   const handleFileChange = async (e) => {
+//     const file = e.target.files[0];
+//     if (file) {
+//       try {
+//         const worker = createWorker();
+//         await worker.load();
+//         await worker.loadLanguage("eng");
+//         await worker.initialize("eng");
+//         const {
+//           data: { text },
+//         } = await worker.recognize(file);
+//         await worker.terminate();
+//         setEncodedString(text);
+//       } catch (error) {
+//         console.error(error);
+//         setErrorMessage("Failed to decode QR code.");
+//       }
+//     }
+//   };
 
-  return (
-    <>
-      <div className="flex items-center justify-center pt-10">
-        <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded ">
-          Scan your QR
-        </button>
-      </div>
-      {/* <video ref={videoRef} id="video" /> */}
-    </>
-  );
-};
+//   return (
+//     <div className="flex flex-col items-center justify-center h-screen">
+//       <input
+//         type="file"
+//         accept="image/*"
+//         onChange={handleFileChange}
+//         className="mb-4"
+//       />
+//       {encodedString ? (
+//         <div className="text-center">
+//           <p className="mb-4">Decoded String:</p>
+//           <p className="font-bold">{encodedString}</p>
+//         </div>
+//       ) : (
+//         <div className="text-center">
+//           <p>Upload a QR code image to decode</p>
+//           {errorMessage && <p className="text-red-500">{errorMessage}</p>}
+//         </div>
+//       )}
+//     </div>
+//   );
+// };
 
-export default VerifyDocument;
+// export default QRCodeDecryptor;
