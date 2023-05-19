@@ -1,51 +1,77 @@
-// import React, { useState } from "react";
-// import { createWorker } from "tesseract.js";
+import React, { useState } from "react";
+import { toast } from "react-toastify";
 
-// const QRCodeDecryptor = () => {
-//   const [encodedString, setEncodedString] = useState("");
-//   const [errorMessage, setErrorMessage] = useState("");
+import QrScanner from "qr-scanner";
+import { dataDecryption } from "../../services";
+import Marksheet from "../marksheet";
 
-//   const handleFileChange = async (e) => {
-//     const file = e.target.files[0];
-//     if (file) {
-//       try {
-//         const worker = createWorker();
-//         await worker.load();
-//         await worker.loadLanguage("eng");
-//         await worker.initialize("eng");
-//         const {
-//           data: { text },
-//         } = await worker.recognize(file);
-//         await worker.terminate();
-//         setEncodedString(text);
-//       } catch (error) {
-//         console.error(error);
-//         setErrorMessage("Failed to decode QR code.");
-//       }
-//     }
-//   };
+const QRCodeDecryptor = () => {
+  const [encodedString, setEncodedString] = useState(null);
+  const [, setFile] = useState(null);
+  const [marksheetData, setMarksheetData] = useState({});
+  const [marksheetSubjectData, setMarksheetSubjectData] = useState({});
+  const [showMarksheet, setShowMarksheet] = useState(false);
 
-//   return (
-//     <div className="flex flex-col items-center justify-center h-screen">
-//       <input
-//         type="file"
-//         accept="image/*"
-//         onChange={handleFileChange}
-//         className="mb-4"
-//       />
-//       {encodedString ? (
-//         <div className="text-center">
-//           <p className="mb-4">Decoded String:</p>
-//           <p className="font-bold">{encodedString}</p>
-//         </div>
-//       ) : (
-//         <div className="text-center">
-//           <p>Upload a QR code image to decode</p>
-//           {errorMessage && <p className="text-red-500">{errorMessage}</p>}
-//         </div>
-//       )}
-//     </div>
-//   );
-// };
+  const handleFileChange = async (e) => {
+    const file = e.target.files[0];
+    setFile(file);
+    const result = await QrScanner.scanImage(file);
+    setEncodedString(result);
+  };
 
-// export default QRCodeDecryptor;
+  const handleDecryption = async (e) => {
+    e.preventDefault();
+    const payload = {
+      data: encodedString,
+    };
+    setShowMarksheet(true);
+    try {
+      const response = await dataDecryption(payload);
+      if (response.error) {
+        toast.error(response?.message || "Process failed! Please try again.");
+      } else {
+        const subjectData = JSON.parse(response.subjectData);
+        const decryptedData = JSON.parse(response.decryptedData);
+        setMarksheetData(decryptedData);
+        setMarksheetSubjectData(subjectData);
+        toast.success(
+          response?.message ||
+            "Data is successfully decrypted! Marksheet will generate in a moment."
+        );
+      }
+    } catch (error) {
+      toast.error(error?.message || "Process failed! Please Try again.");
+    }
+  };
+
+  return (
+    <div className="flex flex-col items-center justify-center h-screen">
+      <div className="text-center">
+        <p>Upload a QR code image to decode</p>
+      </div>
+      <input
+        type="file"
+        accept="image/*"
+        onChange={handleFileChange}
+        className="mb-4"
+      />
+      <button
+        className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-6 mt-4 rounded"
+        type="submit"
+        onClick={handleDecryption}
+      >
+        Submit
+      </button>
+      {showMarksheet && (
+        <div className="m-4">
+          <Marksheet
+            marksheetData={marksheetData}
+            marksheetSubjectData={marksheetSubjectData}
+          />
+        </div>
+      )}
+    </div>
+  );
+};
+
+export default QRCodeDecryptor;

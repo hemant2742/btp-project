@@ -3,7 +3,6 @@ import { toast } from "react-toastify";
 import QRCode from "react-qr-code";
 import Papa from "papaparse";
 import { dataEncryption } from "../../services";
-import Marksheet from "../marksheet";
 
 function GenerateQr() {
   const [qrData, setQrData] = useState({});
@@ -18,8 +17,7 @@ function GenerateQr() {
       const response = await dataEncryption(payload);
       if (response.data.error) {
         toast.error(
-          response?.data.message ||
-            "Data is successfully encrypted! QR will generate in a moment."
+          response?.data.message || "Process failed! Please try again."
         );
       } else {
         setEncryptedData(response.data.encryptedData);
@@ -104,8 +102,6 @@ function GenerateQr() {
       >
         Submit
       </button>
-
-      <Marksheet />
 
       {encryptedData.length > 0 && (
         <div className="pt-8">

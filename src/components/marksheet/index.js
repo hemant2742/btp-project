@@ -1,34 +1,15 @@
 import React from "react";
 import "./marksheet.css"; // Import the CSS file for marksheet styles
 
-const Marksheet = (
-  {
-    //   universityName,
-    //   examName,
-    //   studentName,
-    //   rollNo,
-    //   fatherName,
-    //   session,
-    //   branch,
-    //   year,
-    //   subjects,
-    //   totalMarks,
-  }
-) => {
-  const student = {
-    name: "John Doe",
-    rollNo: "2021001",
-    fatherName: "Robert Doe",
-    session: "2021-2022",
-    branch: "Computer Science",
-    year: "Final Year",
-    subjects: [
-      { name: "Mathematics", marks: 90 },
-      { name: "Science", marks: 85 },
-      { name: "English", marks: 95 },
-    ],
-    totalMarks: 270,
-  };
+const Marksheet = ({ marksheetData, marksheetSubjectData }) => {
+  const sheetDatakeys = Object.keys(marksheetSubjectData);
+  const sheetDataValues = Object.values(marksheetSubjectData);
+
+  const initialValue = 0;
+  const sumWithInitial = sheetDataValues.reduce(
+    (accumulator, currentValue) => accumulator + parseInt(currentValue),
+    initialValue
+  );
 
   return (
     <div className="marksheet-page">
@@ -37,10 +18,12 @@ const Marksheet = (
       <div className="student-details">
         <h3>Student Details</h3>
         <p>
-          <strong>Name: Vibhanshu Pandey</strong>
+          <strong>Name: </strong>
+          {marksheetData["name"]}
         </p>
         <p>
-          <strong>Roll No:CSJMA19001390059</strong>
+          <strong>Roll No:</strong>
+          {marksheetData["roll number"]}
         </p>
         <p>
           <strong>Father's Name:Parmatma Pandey</strong>
@@ -63,15 +46,15 @@ const Marksheet = (
           </tr>
         </thead>
         <tbody>
-          {student.subjects.map((subject, index) => (
+          {sheetDatakeys.map((item, index) => (
             <tr key={index}>
-              <td>{subject.name}</td>
-              <td>{subject.marks}</td>
+              <td>{item.toUpperCase()}</td>
+              <td>{sheetDataValues[index]}</td>
             </tr>
           ))}
           <tr>
-            <td>Total Marks:</td>
-            <td>{student.totalMarks}</td>
+            <td>Total Marks: </td>
+            <td>{sumWithInitial}</td>
           </tr>
         </tbody>
       </table>

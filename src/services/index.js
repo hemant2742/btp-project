@@ -16,9 +16,14 @@ export const dataEncryption = async (payload) => {
 };
 
 export const dataDecryption = async (payload) => {
-  await axios({
+  const data = await axios({
     method: "post",
     url: `${path}/crypto/decrypt`,
     data: payload,
   });
+  if (data.status === 200 || data.status === 201) {
+    return data.data;
+  } else {
+    throw new Error("Process failed!");
+  }
 };
