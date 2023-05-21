@@ -30,8 +30,9 @@ exports.decryptData = async function (req, res) {
   const decryptedData = JSON.parse(decryptData(data));
   const keys = Object.keys(decryptedData);
   const subjectData = {};
+  const excludedFields = ['name', 'roll number', 'father name', 'branch', 'session', 'year']
   for (const key of keys) {
-    if (key !== "name" && key !== "roll number") {
+    if (!excludedFields.includes(key) ) {
       subjectData[key] = decryptedData[key];
     }
   }

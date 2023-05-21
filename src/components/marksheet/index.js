@@ -13,10 +13,10 @@ const Marksheet = ({ marksheetData, marksheetSubjectData }) => {
 
   return (
     <div className="marksheet-page">
-      <h1 className="university-name">CSJM University,Kanpur</h1>
-      <h2 className="exam-name">Exam: Mid Semester Examination </h2>
+      <h1 className="university-name text-3xl font-bold">CSJM University,Kanpur</h1>
+      <h2 className="exam-name text-2xl font-bold">Exam: Mid Semester Examination </h2>
       <div className="student-details">
-        <h3>Student Details</h3>
+        <h3 className="text-center text-xl font-bold">Student Details</h3>
         <p>
           <strong>Name: </strong>
           {marksheetData["name"]}
@@ -42,6 +42,7 @@ const Marksheet = ({ marksheetData, marksheetSubjectData }) => {
           {marksheetData["year"]}
         </p>
       </div>
+      <h3 className="text-center text-xl font-bold mb-4">Grade Report</h3>
       <table className="marks-table">
         <thead>
           <tr>

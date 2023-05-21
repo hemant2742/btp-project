@@ -44,7 +44,7 @@ function GenerateQr() {
     }
   };
 
-  const downloadQRCode = (item) => {
+  const downloadQRCode = (item, scale = 10) => {
     const svgElement = document.getElementById(item.rollNumber);
     const serializer = new XMLSerializer();
     const svgString = serializer.serializeToString(svgElement);
@@ -61,9 +61,9 @@ function GenerateQr() {
 
     img.onload = () => {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
-      canvas.width = img.width;
-      canvas.height = img.height;
-      ctx.drawImage(img, 0, 0);
+      canvas.width = img.width*scale;
+      canvas.height = img.height*scale;
+      ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
 
       DOMURL.revokeObjectURL(url);
 
