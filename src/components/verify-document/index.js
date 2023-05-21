@@ -14,9 +14,7 @@ const QRCodeDecryptor = () => {
 
   const handleFileChange = async (e) => {
     const file = e.target.files[0];
-    console.log(file);
     const result = await QrScanner.scanImage(file);
-    console.log("Hhdh");
     setEncodedString(result);
   };
 
@@ -72,7 +70,6 @@ const QRCodeDecryptor = () => {
   useEffect(() => {
     async function onScanSuccess(decodedText, decodedResult) {
       // handle the scanned code as you like, for example:
-      console.log(`Code matched = ${decodedText}`, decodedResult);
       await handleDecryptionForCamera(decodedResult.decodedText);
       scanner.clear();
     }
