@@ -79,9 +79,9 @@ function GenerateQr() {
 
   return (
     <div className="flex flex-col items-center justify-center">
-      <h1 className="text-2xl font-bold mb-8 pt-8">
-        Upload the CSV to generate QRs
-      </h1>
+      <h3 className="text-l font-bold mb-8 pt-8">
+        Upload students details in CSV to generate QRs
+      </h3>
 
       <input
         type="file"
