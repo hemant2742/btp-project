@@ -26,16 +26,20 @@ const Marksheet = ({ marksheetData, marksheetSubjectData }) => {
           {marksheetData["roll number"]}
         </p>
         <p>
-          <strong>Father's Name:Parmatma Pandey</strong>
+          <strong>Father's Name:</strong>
+          {marksheetData["father name"]}
         </p>
         <p>
-          <strong>Session:2022-23</strong>
+          <strong>Session:</strong>
+          {marksheetData["session"]}
         </p>
         <p>
-          <strong>Branch:Computer Science and Engineering</strong>
+          <strong>Branch:</strong>
+          {marksheetData["branch"]}
         </p>
         <p>
-          <strong>Year:2019</strong>
+          <strong>Year:</strong>
+          {marksheetData["year"]}
         </p>
       </div>
       <table className="marks-table">

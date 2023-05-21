@@ -79,59 +79,62 @@ function GenerateQr() {
 
   return (
     <div className="flex flex-col items-center justify-center">
-      <h3 className="text-l font-bold mb-8 pt-8">
-        Upload students details in CSV to generate QRs
+      <h3 className="text-2xl font-bold my-8 pt-8">
+        Upload Student Details in CSV to Generate QR Codes
       </h3>
 
-      <input
-        type="file"
-        accept=".csv"
-        name="file"
-        icon="file text outline"
-        iconPosition="left"
-        label="Upload CSV"
-        labelPosition="right"
-        placeholder="UploadCSV..."
-        onChange={handleCSVConversion}
-      />
+      <div className="flex flex-col items-center">
+        <label htmlFor="file" className="text-lg">
+          Upload CSV File:
+        </label>
+        <input
+          type="file"
+          accept=".csv"
+          id="file"
+          name="file"
+          className="border p-2 mt-2"
+          onChange={handleCSVConversion}
+        />
+      </div>
+
       <button
-        className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-6 mt-4 rounded"
+        className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-6 mt-4 rounded disabled:opacity-50"
         type="submit"
         onClick={handleDataEncryption}
         disabled={!qrData}
       >
-        Submit
+        Generate QR Codes
       </button>
 
       {encryptedData.length > 0 && (
-        <div className="pt-8">
-          <div className="flex flex-wrap justify-center border">
+        <div className="mt-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {encryptedData.map((item) => (
-              <div key={item.id} className="w-1/3 p-4 border border-gray-900">
+              <div key={item.id} className="border p-4">
                 <div className="flex flex-col items-center">
                   {/* Roll number */}
                   <h3 className="text-lg font-semibold mb-2">
-                    <b>Roll Number : {item.rollNumber}</b>
+                    <b>Roll Number: {item.rollNumber}</b>
                   </h3>
 
                   {/* QR code */}
                   <QRCode
                     id={item.rollNumber}
-                    title="QR code"
+                    title="QR Code"
                     value={item.encryptedString}
-                    bgColor={"#FFFFFF"}
-                    fgColor={"#000000"}
+                    bgColor="#FFFFFF"
+                    fgColor="#000000"
                     size={130}
                   />
 
                   {/* Download button */}
                   <button
-                    className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded mt-2"
+                    className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-6 mt-2 rounded disabled:opacity-50"
                     type="submit"
                     onClick={() => downloadQRCode(item)}
                     disabled={!qrData}
                   >
-                    Download QR
+                    Download QR Code
                   </button>
                 </div>
               </div>
