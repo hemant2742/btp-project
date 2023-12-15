@@ -4,11 +4,13 @@ export const TABS = [
     value: "/home",
   },
   {
-    label: "Generate QR",
+    label: "Encrypt",
     value: "/generate-qr",
   },
   {
-    label: "Verify Document",
+    label: "Verify",
     value: "/verify",
   },
+ 
+
 ];

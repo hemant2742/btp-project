@@ -11,15 +11,17 @@ export default function Header() {
         zIndex: "10",
         right: 0,
         left: 0,
-        backgroundColor: "rgb(15, 82, 186)",
+        backgroundColor: "rgb(128,0,0)",
       }}
     >
-      <header className="text-gray-400  body-font ">
-        <div className="container mx-auto flex flex-wrap p-3 flex-col md:flex-row items-center">
-          <nav className="text-xl md:ml-auto md:mr-auto flex flex-wrap items-center text-base justify-center">
-            {TABS?.map(({ label, value }) => (
+      <header className="text-gray-400 body-font">
+        <div className="container flex-wrap p-3 flex-col md:flex-row">
+          <nav className="text-xl md:ml-auto md:mr-auto flex flex-wrap items-center text-base justify-end">
+            {TABS?.map(({ label, value }, index) => (
               <Link
-                className="mr-5 text-white hover:text-white font-medium"
+                key={index}
+                className={`mr-6 text-white hover:text-white font-medium ${index === TABS.length - 1 ? "ml-auto" : ""
+                  }`}
                 to={value}
               >
                 {label}

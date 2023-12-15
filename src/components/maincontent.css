@@ -1,0 +1,28 @@
+
+.card{
+    margin: 1.5em 0;
+}
+.column{
+    padding: 1.5em;
+}
+.social-nav{
+    position: fixed;
+    right: 0;
+    bottom: 0;
+    padding: 3em;
+}
+Button{
+    margin: 1em;
+    float: right
+}
+.binary{
+    margin: 1.5em;
+    width: 600x;
+    white-space: pre-line;
+    max-width:600px;
+}
+.badge{
+    white-space:normal;
+    max-width: 600px;
+    text-align:left;
+}

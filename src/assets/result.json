@@ -1,0 +1,14 @@
+const studentData = {
+    "student_id": "12345",
+    "name": "John Doe",
+    "grades": {
+      "math": 85,
+      "english": 90,
+      "history": 78,
+      "science": 92
+    },
+    "average": 86.25,
+    "status": "Pass"
+  };
+
+  

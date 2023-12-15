@@ -7,8 +7,7 @@ import {
 } from "react-router-dom";
 import Header from "../components/header";
 import Home from "../components/home";
-import GenerateQR from "../components/generate-qr";
-import VerifyDocument from "../components/verify-document";
+import MainPage from "../components/maincontent";
 
 const RoutePath = () => {
   return (
@@ -25,11 +24,8 @@ const RoutePath = () => {
           <Route exact path="/home">
             <Home />
           </Route>
-          <Route exact path="/generate-qr">
-            <GenerateQR />
-          </Route>
           <Route exact path="/verify">
-            <VerifyDocument />
+            <MainPage />
           </Route>
         </Switch>
       </Router>

@@ -1,39 +1,68 @@
-import React from "react";
-import logo2 from "../../assets/l2.png";
+import React, { useState } from "react";
+import backgroundImage from "../../assets/Computer-Centre.jpg";
 
-const Home = () => {
+const SignIn = () => {
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+
+  const handleSignIn = (e) => {
+    e.preventDefault();
+    // Add your authentication logic here
+    console.log("Signing in with:", username, password);
+    // You may want to redirect the user or perform other actions after successful sign-in
+  };
+
+  const backgroundStyle = {
+    backgroundImage: `url(${backgroundImage})`,
+    backgroundSize: "cover",
+    backgroundPosition: "center",
+  };
+
   return (
-    <div>
-      <div className="rounded-xl pb-8 container mx-auto flex justify-center mb-10 mt-10 ">
-        <img src={logo2} alt="cse" />
-      </div>
-
-      <div className="pl-5 pr-5 ">
-        <div
-          id="modal"
-          className="rounded-xl pb-8 container mx-auto flex justify-center border-3 mb-3 shadow-2xl "
-        >
-          <p className="mt-4 light:text-black dark:text-black text-justify">
-            <strong>UIET Kanpur</strong>,{" "}
-            <b>UNIVERSITY INSTITUTE OF ENGINEERING AND TECHNOLOGY</b>, a
-            department of <b>CSJM UNIVERSITY</b> has prospered by leaps and
-            bounds over the years achieving great academic heights besides
-            foraying into the top 50 finest engineering colleges of the country.
-            Having been taught by one of the best faculties of the region, the
-            students of UIET Kanpur have been empowered and groomed to take on
-            the rigorous challenges in their upcoming lives. The sincere efforts
-            made by our glorious alumni in the progress of the institute has
-            further strengthened its fundamentals in a short span of time. The
-            atmosphere of creativity and the enterprising attitude of the
-            students has promoted a spirit of innovation. The recent
-            achievements of the students in myriad fields including software,
-            mechanical, electronics has set a new trend in the road to
-            establishing a brand name for UIET Kanpur.
-          </p>
+    <div className="flex justify-center items-center h-screen" style={backgroundStyle}>
+      <form className="bg-white shadow-md rounded-lg px-8 py-8 w-96">
+        <h2 className="text-3xl font-bold mb-6 text-center text-gray-800">Sign In</h2>
+        <div className="mb-4">
+          <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="username">
+            Username
+          </label>
+          <input
+            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+            id="username"
+            type="text"
+            placeholder="Enter your username"
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
+            required
+          />
         </div>
-      </div>
+        <div className="mb-6">
+          <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="password">
+            Password
+          </label>
+          <input
+            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+            id="password"
+            type="password"
+            placeholder="Enter your password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
+          />
+        </div>
+        <div className="flex items-center justify-center">
+          <button
+            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+            type="submit"
+            onClick={handleSignIn}
+          >
+            Sign In
+          </button>
+        </div>
+      </form>
+      
     </div>
   );
 };
 
-export default Home;
+export default SignIn;
