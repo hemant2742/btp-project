@@ -26,10 +26,10 @@ class Decode extends Component {
                 {callCount > 1 ?
                     <div className="binary">
                         <Card
-                            title="Decoded Message"
+                            title="Decoded Data"
                             statusColor="red"
                             className="card-Talker"
-                            body={<Badge color="success">{callCount > 2 ? decodedMessage : "Will calculate..."}</Badge>}
+                            body={<Badge color="success">{callCount > 2 ? decodedMessage : "Will Decode..."}</Badge>}
                         />
 
                     </div>

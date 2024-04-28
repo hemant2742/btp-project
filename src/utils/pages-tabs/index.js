@@ -3,14 +3,13 @@ export const TABS = [
     label: "Home",
     value: "/home",
   },
+
   {
-    label: "Encrypt",
-    value: "/generate-qr",
-  },
-  {
-    label: "Verify",
+    label: "Student Result",
     value: "/verify",
   },
- 
-
+  {
+    label:"Form",
+    value:"/form"
+  }
 ];

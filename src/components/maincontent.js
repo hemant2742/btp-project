@@ -35,6 +35,7 @@ class MainPage extends Component {
                                 body={<Decode/>}
                                 />
                         }
+                        
                         </Grid.Col>
                     </Grid.Row>
                 </Page>

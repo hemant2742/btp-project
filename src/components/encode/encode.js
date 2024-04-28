@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { string, file, any } from 'prop-types';
-import { Alert, Form, Button, Header, Badge } from 'tabler-react'
+import { Form, Button, Header, Badge } from 'tabler-react'
 
 class Encode extends Component {
     constructor(props) {
@@ -29,8 +29,8 @@ class Encode extends Component {
         return (
             <div>
                 <Form>
-                    <Form.Input name='message' label='Message' placeholder='Enter Your Message' onChange={this.handleChange} />
-                    <Form.FileInput name='picture' label='Picture - Only JPG and PNG' accept="jpg, png" onChange={this.handleChange} />
+                    <Form.Input name='message' label='Data' placeholder='Enter Student Data' onChange={this.handleChange} />
+                    <Form.FileInput name='picture' label='Picture - Only BMP and PNG' accept="jpg, png" onChange={this.handleChange} />
                 </Form>
                 {callCount > 1 ?
                     <div className="binary">
@@ -50,7 +50,7 @@ class Encode extends Component {
                             <canvas style={{ width: "50%", height: "30%" }} ref="originalC"></canvas>
                         </div>
                         <div>
-                            <Header.H3>Message</Header.H3>
+                            <Header.H3>Encoded</Header.H3>
                             <canvas style={{ width: "50%", height: "30%" }} id="canvas" ref="messageC"></canvas>
                             <Button color="primary" value='Submit' onClick={download} > Download </Button>
                         </div>
