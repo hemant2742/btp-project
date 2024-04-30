@@ -1,68 +1,99 @@
-import React, { useState } from "react";
+import { useState } from "react";
+import axios from "axios";
+import { Link, useHistory } from "react-router-dom";
+import styles from "./style.module.css";
 import backgroundImage from "../../assets/Computer-Centre.jpg";
+import { ToastContainer, toast } from 'react-toastify';
 
-const SignIn = () => {
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
+const Login = () => {
+	const history = useHistory()
+	const [data, setData] = useState({ username: "", password: "" });
+	const [error, setError] = useState("");
 
-  const handleSignIn = (e) => {
-    e.preventDefault();
-    // Add your authentication logic here
-    console.log("Signing in with:", username, password);
-    // You may want to redirect the user or perform other actions after successful sign-in
-  };
 
-  const backgroundStyle = {
-    backgroundImage: `url(${backgroundImage})`,
-    backgroundSize: "cover",
-    backgroundPosition: "center",
-  };
+	// useEffect(() => {
+	// 	localStorage.setItem("isLoggedIn", "false");
+	// }, []); 
 
-  return (
-    <div className="flex justify-center items-center h-screen" style={backgroundStyle}>
-      <form className="bg-white shadow-md rounded-lg px-8 py-8 w-96">
-        <h2 className="text-3xl font-bold mb-6 text-center text-gray-800">Sign In</h2>
-        <div className="mb-4">
-          <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="username">
-            Username
-          </label>
-          <input
-            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-            id="username"
-            type="text"
-            placeholder="Enter your username"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-            required
-          />
-        </div>
-        <div className="mb-6">
-          <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="password">
-            Password
-          </label>
-          <input
-            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-            id="password"
-            type="password"
-            placeholder="Enter your password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-          />
-        </div>
-        <div className="flex items-center justify-center">
-          <button
-            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-            type="submit"
-            onClick={handleSignIn}
-          >
-            Sign In
-          </button>
-        </div>
-      </form>
-      
-    </div>
-  );
+	const handleChange = ({ currentTarget: input }) => {
+		setData({ ...data, [input.name]: input.value });
+	};
+
+	const handleSubmit = async (e) => {
+		e.preventDefault();
+		try {
+			const response = await axios.post("http://localhost:5000/api/v1/auth/login", data);
+			console.log("Response status:", response.status); // Log response status
+			console.log("Login response:", response.data); // Log response data
+			const isLoggedIn = response.status === 200;
+			console.log("Is logged in:", isLoggedIn); // Log whether user is logged in or not
+			localStorage.setItem("isLoggedIn", isLoggedIn);
+			localStorage.setItem("isEncryptClicked", "false");
+			if (isLoggedIn) {
+				localStorage.setItem("token", response.data.accessToken);
+				localStorage.setItem("user", JSON.stringify(response.data.username));
+			}
+			toast.success("Login successful");
+			window.location.href = "/encrypt-records";
+		} catch (error) {
+			console.error("Login failed", error);
+			console.log("Error response data:", error.response.data); // Log error response data
+			console.log("Error response status:", error.response.status); // Log error status code
+			localStorage.setItem("isLoggedIn", "false");
+			setError(error.response.data.message);
+		}
+	};
+
+	const backgroundStyle = {
+		backgroundImage: `url(${backgroundImage})`,
+		backgroundSize: "cover",
+		backgroundPosition: "center",
+	};
+
+	return (
+		<div className={styles.login_container} style={backgroundStyle}>
+			<ToastContainer
+				position="top-center"
+			/>
+			<div className={styles.login_form_container}>
+				<div className={styles.left}>
+					<form className={styles.form_container} onSubmit={handleSubmit}>
+						<h1>Login to Your Account</h1>
+						<input
+							type="string"
+							placeholder="User Name"
+							name="username"
+							onChange={handleChange}
+							value={data.username}
+							required
+							className={styles.input}
+						/>
+						<input
+							type="password"
+							placeholder="Password"
+							name="password"
+							onChange={handleChange}
+							value={data.password}
+							required
+							className={styles.input}
+						/>
+						{error && <div className={styles.error_msg}>{error}</div>}
+						<button type="submit" className={styles.green_btn}>
+							Sign In
+						</button>
+					</form>
+				</div>
+				<div className={styles.right}>
+					<h1>New Account</h1>
+					<Link to="/register">
+						<button type="button" className={styles.white_btn}>
+							Sign Up
+						</button>
+					</Link>
+				</div>
+			</div>
+		</div>
+	);
 };
 
-export default SignIn;
+export default Login;
