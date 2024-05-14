@@ -35,6 +35,7 @@ const Login = () => {
 			}
 			toast.success("Login successful");
 			window.location.href = "/encrypt-records";
+
 		} catch (error) {
 			console.error("Login failed", error);
 			console.log("Error response data:", error.response.data); // Log error response data

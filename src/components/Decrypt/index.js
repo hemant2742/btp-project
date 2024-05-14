@@ -7,8 +7,8 @@ import '../encode_form/studentrecord.css';
 const DecryptStudentData = () => {
     const [studentData, setStudentData] = useState([]);
     const [changedData, setChangedData] = useState([]);
-    const[changedByUser, setChangedByUser] = useState([])
-    console.log(changedByUser)
+    const [changedByUser, setChangedByUser] = useState([]);
+    const [noChangesFound, setNoChangesFound] = useState(false);
 
     useEffect(() => {
         getData();
@@ -27,8 +27,13 @@ const DecryptStudentData = () => {
         axios.get('http://localhost:5000/api/v1/records/check')
             .then(response => {
                 console.log(response)
-                setChangedData(response.data.records);
-                setChangedByUser(response.data.user)
+                if (response.data.records.length === 0) {
+                    setNoChangesFound(true);
+                } else {
+                    setChangedData(response.data.records);
+                    setChangedByUser(response.data.user);
+                    setNoChangesFound(false);
+                }
             })
             .catch(error => {
                 console.log(error);
@@ -45,18 +50,15 @@ const DecryptStudentData = () => {
                 </div>
                 <div className='student-record-container'>
                     {changedData.length > 0 && changedData.map((data, studentIndex) => (
-                         <DataFromImg
-                         key={studentIndex}
-                         data={data}
-                         compare={true}
-                         changedByUser={changedByUser}
-                     />
-                    ))}
+                        <DataFromImg
+                            key={studentIndex}
+                            data={data}
+                            compare={true}
+                            changedByUser={changedByUser}
+                        />
+                    ))
 
-
-                    {changedData.length === 0 && studentData.length > 0 && studentData.map((data, studentIndex) => (
-                        <DataFromImg key={studentIndex} data={data} />
-                    ))}
+                    }
                 </div>
             </div>
         </div>

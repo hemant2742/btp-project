@@ -42,6 +42,9 @@ const RoutePath = () => {
         <Route exact path="/home">
           {/* Pass handleLogin to Home component */}
           <Home />
+          {
+            isLoggedIn && <Redirect to="/verify" />
+          }
         </Route>
         {/* Public routes */}
         <Route exact path="/register">

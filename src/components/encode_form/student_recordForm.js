@@ -65,8 +65,8 @@ const StudentRecordForm = (props) => {
                     </Col>
                 </Row>
                 <Row>
-                    <Form.Group controlId="formSubjects">
-                        <Form.Label>Subjects and Grades</Form.Label>
+                    <h5 className='text-center m-2'>Subjects and Grades</h5>
+                    <Form.Group controlId="formSubjects" className='subjects-container'>
                         {subject.map((subject, index) => (
                             <Row key={index}>
                                 <Col>

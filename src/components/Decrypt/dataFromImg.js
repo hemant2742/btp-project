@@ -7,13 +7,11 @@ import "../encode_form/studentrecord.css";
 
 const DataFromImg = (props) => {
     const { data } = props;
-    console.log(data)
+    
 
-    // Check if data exists before trying to access its properties
-    if (!data) {
-        return null; // If data is undefined or null, return null to render nothing
+    if (!data || data.length === 0) {
+        return <span className='no-change-found'>No change found.</span>; 
     }
-
     const { name, rollNumber, subject, imageUrl, username } = data;
 
     return (
