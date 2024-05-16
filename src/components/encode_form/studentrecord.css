@@ -92,10 +92,20 @@
 }
 
 .no-change-text {
+  display: flex;
+  justify-content: center;
+  align-items: center;
   font-size: 32px;
   font-weight: bold;
   text-align: center;
   display: flex;
   justify-content: center;
   align-items: center;
+}
+
+.form-select {
+  width: 136px !important;
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
 }

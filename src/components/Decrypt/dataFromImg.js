@@ -7,10 +7,10 @@ import "../encode_form/studentrecord.css";
 
 const DataFromImg = (props) => {
     const { data } = props;
-    
 
-    if (!data || data.length === 0) {
-        return <span className='no-change-found'>No change found.</span>; 
+
+    if (!data) {
+        return <span className='no-change-found'>No change found.</span>;
     }
     const { name, rollNumber, subject, imageUrl, username } = data;
 
@@ -25,12 +25,6 @@ const DataFromImg = (props) => {
                         <p>Year: 4th</p>
                     </div>
                 </Col>
-                {/* <Col>
-                    <div className='student-image-container'>
-                        <Image className='student-image' src={imageUrl} alt="Student Image" />
-                        <span className='image-text'>Student Image</span>
-                    </div>
-                </Col> */}
                 <Col>
                     <div className='decoded-image-container'>
                         <Image className='decoded-image' src={imageUrl} alt="Decoded Image" />
@@ -55,8 +49,6 @@ const DataFromImg = (props) => {
                             </Form.Group>
                         ))}
                     </div>
-
-
                 </Col>
             </Row>
             <Row>

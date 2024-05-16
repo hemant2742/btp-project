@@ -2,6 +2,21 @@ import React, { Component } from 'react'
 import { string, file, any } from 'prop-types';
 import { Form, Button, Header, Badge } from 'tabler-react'
 
+
+
+
+// Assuming you have the public key provided by the recipient
+ const recipientPublicKey = `-----BEGIN PUBLIC KEY-----
+                            MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA0HySxRrSY5+jt7XJ71oj
+                            hCkqOq59e0rf6jXYWvLOFfOxIeQsH6cIac4wujhfdMzJtlmH6v6w3R0h/AVI0Ehs
+                            wPoPLsBT3K6VrLrCyM8HpZ0BK+FTDzQHFCtNo/VEu6bU+AzlKqu8ABHdP+vPEtAl
+                            P4hzQ7nsnxuXCF8xayuWnI9VgXZ/GsCD8l++vP5vyeAaR5TpLxuqEa0j9OL7VYCb
+                            8jNSqzt5Q3hzpNCTTnQ16VnudN6thA8fY4ZpI36V0CwveAepv91+7ONoiD8Oz5ZO
+                            fDzyY1qyftrY5JUDIBn4inSzIkQGYgHjTBabRTUtHXWUjWhQVOslnvhhWvMV/J+B
+                            AQIDAQAB
+                            -----END PUBLIC KEY-----`;
+const NodeRSAA ="node-rsa";
+
 class Encode extends Component {
     constructor(props) {
         super(props)
@@ -108,6 +123,17 @@ class Encode extends Component {
     callEncode = canvas => {
         this.encodeMessage()
     }
+  
+    
+    // Function to encrypt using RSA
+    encryptWithRSA = (plaintext, publicKey) => {
+        const key = NodeRSAA.createKey();
+        key.importKey(publicKey, 'pkcs8-public'); // Import public key
+        const encrypted = key.encrypt(plaintext, 'base64'); // Encrypt plaintext
+        return encrypted;
+    };
+    
+
     encodeMessage = () => {
         const { messageC } = this.refs
         const { message, originalImg } = this.state

@@ -9,6 +9,7 @@ const DecryptStudentData = () => {
     const [changedData, setChangedData] = useState([]);
     const [changedByUser, setChangedByUser] = useState([]);
     const [noChangesFound, setNoChangesFound] = useState(false);
+    const [decryptClicked, setDecryptClicked] = useState(false);
 
     useEffect(() => {
         getData();
@@ -24,6 +25,7 @@ const DecryptStudentData = () => {
     };
 
     const handleOnDecrypt = () => {
+        setDecryptClicked(true);
         axios.get('http://localhost:5000/api/v1/records/check')
             .then(response => {
                 console.log(response)
@@ -49,16 +51,20 @@ const DecryptStudentData = () => {
                     </Button>
                 </div>
                 <div className='student-record-container'>
-                    {changedData.length > 0 && changedData.map((data, studentIndex) => (
-                        <DataFromImg
-                            key={studentIndex}
-                            data={data}
-                            compare={true}
-                            changedByUser={changedByUser}
-                        />
-                    ))
-
-                    }
+                    {changedData.length > 0 ? (
+                        changedData.map((data, studentIndex) => (
+                            <DataFromImg
+                                key={studentIndex}
+                                data={data}
+                                compare={true}
+                                changedByUser={changedByUser}
+                            />
+                        ))
+                    ) : (
+                        decryptClicked && noChangesFound && (
+                            <span className='no-change-text'>No change found.</span>
+                        )
+                    )}
                 </div>
             </div>
         </div>

@@ -2,16 +2,22 @@ import React, { useState, useEffect } from 'react';
 import { Form, Row, Col } from 'react-bootstrap';
 import Image from 'react-bootstrap/Image';
 import Spinner from 'react-bootstrap/Spinner';
-
 import './studentrecord.css';
 
 const StudentRecordForm = (props) => {
+    console.log(props.encryptClickCount)
     const { name, rollNumber, subject, imageUrl } = props.data;
     const [showSpinner, setShowSpinner] = useState(false);
     const [showDecodedImage, setShowDecodedImage] = useState(false);
+    
+    const hjhh = localStorage.getItem('isEncryptClicked') === "true";
 
-
-
+    useEffect(() => {
+        if(props.encryptClickCount > 1) {
+            setShowDecodedImage(true);
+        }
+    }, [props.encryptClickCount]);
+    
     useEffect(() => {
         if (props.encryptClicked) {
             setShowSpinner(true);
@@ -72,11 +78,17 @@ const StudentRecordForm = (props) => {
                                 <Col>
                                     <Form.Group controlId={`subject${index + 1}`}>
                                         <Form.Label>{subject.name}</Form.Label>
-                                        <Form.Control
-                                            type="text"
-                                            placeholder={subject.grade}
+                                        <Form.Select
                                             onChange={(e) => props.onGradeChange(e, index)}
-                                        />
+                                            disabled={!hjhh}
+                                            placeholder={subject.grade}
+                                            defaultValue={subject.grade} 
+                                        >
+                                            <option value="A">A</option>
+                                            <option value="B">B</option>
+                                            <option value="C">C</option>
+                                            <option value="D">D</option>
+                                        </Form.Select>
                                     </Form.Group>
                                 </Col>
                             </Row>

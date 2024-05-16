@@ -29,6 +29,7 @@ const Login = () => {
 			console.log("Is logged in:", isLoggedIn); // Log whether user is logged in or not
 			localStorage.setItem("isLoggedIn", isLoggedIn);
 			localStorage.setItem("isEncryptClicked", "false");
+			localStorage.setItem("encryptClickCount", 0);
 			if (isLoggedIn) {
 				localStorage.setItem("token", response.data.accessToken);
 				localStorage.setItem("user", JSON.stringify(response.data.username));
